@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Mot de Passe Sécurisé</title>
+    <style>
+        /* --- CSS : Le Style --- */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #bb86fc; /* Violet clair */
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .result-container {
+            background-color: #333333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        #result {
+            font-size: 1.2em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            word-break: break-all;
+        }
+        #copy-btn {
+            background-color: #bb86fc;
+            color: #121212;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+        .option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: #03dac6; /* Cyan */
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Générateur de Mot de Passe</h1>
+        
+        <div class="result-container">
+            <span id="result">Votre mot de passe...</span>
+            <button id="copy-btn">Copier</button>
+        </div>
+        
+        <div class="options">
+            <div class="option">
+                <label for="length">Longueur (8-32)</label>
+                <input type="number" id="length" value="16" min="8" max="32">
+            </div>
+            <div class="option">
+                <label for="uppercase">Inclure les majuscules (A-Z)</label>
+                <input type="checkbox" id="uppercase" checked>
+            </div>
+            <div class="option">
+                <label for="numbers">Inclure les chiffres (0-9)</label>
+                <input type="checkbox" id="numbers" checked>
+            </div>
+            <div class="option">
+                <label for="symbols">Inclure les symboles (!@#)</label>
+                <input type="checkbox" id="symbols" checked>
+            </div>
+        </div>
+        
+        <button class="generate-btn" id="generate">Générer le mot de passe</button>
+    </div>
+
+    <script>
+        // --- JavaScript : La Logique ---
+
+        // On récupère tous les éléments dont on a besoin
+        const resultEl = document.getElementById('result');
+        const lengthEl = document.getElementById('length');
+        const uppercaseEl = document.getElementById('uppercase');
+        const numbersEl = document.getElementById('numbers');
+        const symbolsEl = document.getElementById('symbols');
+        const generateEl = document.getElementById('generate');
+        const copyEl = document.getElementById('copy-btn');
+
+        const randomFunc = {
+            lower: getRandomLower,
+            upper: getRandomUpper,
+            number: getRandomNumber,
+            symbol: getRandomSymbol
+        };
+
+        // Logique pour copier le mot de passe
+        copyEl.addEventListener('click', () => {
+            const password = resultEl.innerText;
+            if (!password || password === 'Votre mot de passe...') return;
+            navigator.clipboard.writeText(password);
+            copyEl.innerText = 'Copié!';
+            setTimeout(() => {
+                copyEl.innerText = 'Copier';
+            }, 2000);
+        });
+        
+        // Logique pour la génération
+        generateEl.addEventListener('click', () => {
+            const length = +lengthEl.value;
+            const hasUpper = uppercaseEl.checked;
+            const hasNumbers = numbersEl.checked;
+            const hasSymbols = symbolsEl.checked;
+            resultEl.innerText = generatePassword(true, hasUpper, hasNumbers, hasSymbols, length);
+        });
+
+        function generatePassword(lower, upper, number, symbol, length) {
+            let generatedPassword = '';
+            const typesCount = lower + upper + number + symbol;
+            const typesArr = [{lower}, {upper}, {number}, {symbol}].filter(item => Object.values(item)[0]);
+            
+            if(typesCount === 0) {
+                return '';
+            }
+            
+            for(let i = 0; i < length; i += typesCount) {
+                typesArr.forEach(type => {
+                    const funcName = Object.keys(type)[0];
+                    generatedPassword += randomFunc[funcName]();
+                });
+            }
+            
+            const finalPassword = generatedPassword.slice(0, length);
+            return finalPassword;
+        }
+
+        // Fonctions qui génèrent les caractères aléatoires
+        function getRandomLower() {
+            return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+        }
+        function getRandomUpper() {
+            return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+        }
+        function getRandomNumber() {
+            return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
+        }
+        function getRandomSymbol() {
+            const symbols = '!@#$%^&*(){}[]=<>/,.';
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+    </script>
+
+</body>
+</html>
