@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZTNE3LB0P"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X2TH0JLR6Y"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-KZTNE3LB0P');
+      gtag('config', 'G-X2TH0JLR6Y');
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,12 +89,12 @@
 <body>
     <div class="container">
         <h1>Générateur de Mot de Passe</h1>
-        
+
         <div class="result-container">
             <span id="result">Votre mot de passe...</span>
             <button id="copy-btn">Copier</button>
         </div>
-        
+
         <div class="options">
             <div class="option">
                 <label for="length">Longueur (8-32)</label>
@@ -113,7 +113,7 @@
                 <input type="checkbox" id="symbols" checked>
             </div>
         </div>
-        
+
         <button class="generate-btn" id="generate">Générer le mot de passe</button>
     </div>
 
@@ -146,7 +146,7 @@
                 copyEl.innerText = 'Copier';
             }, 2000);
         });
-        
+
         // Logique pour la génération
         generateEl.addEventListener('click', () => {
             const length = +lengthEl.value;
@@ -160,18 +160,18 @@
             let generatedPassword = '';
             const typesCount = lower + upper + number + symbol;
             const typesArr = [{lower}, {upper}, {number}, {symbol}].filter(item => Object.values(item)[0]);
-            
+
             if(typesCount === 0) {
                 return '';
             }
-            
+
             for(let i = 0; i < length; i += typesCount) {
                 typesArr.forEach(type => {
                     const funcName = Object.keys(type)[0];
                     generatedPassword += randomFunc[funcName]();
                 });
             }
-            
+
             const finalPassword = generatedPassword.slice(0, length);
             return finalPassword;
         }
