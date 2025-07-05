@@ -119,8 +119,6 @@
 
     <script>
         // --- JavaScript : La Logique ---
-
-        // On récupère tous les éléments dont on a besoin
         const resultEl = document.getElementById('result');
         const lengthEl = document.getElementById('length');
         const uppercaseEl = document.getElementById('uppercase');
@@ -136,7 +134,6 @@
             symbol: getRandomSymbol
         };
 
-        // Logique pour copier le mot de passe
         copyEl.addEventListener('click', () => {
             const password = resultEl.innerText;
             if (!password || password === 'Votre mot de passe...') return;
@@ -147,8 +144,12 @@
             }, 2000);
         });
 
-        // Logique pour la génération
+        // Logique pour la génération AVEC le lien direct
         generateEl.addEventListener('click', () => {
+            // Ouvre le lien direct dans un nouvel onglet
+            window.open('https://otieu.com/4/9532233', '_blank');
+            
+            // Génère le mot de passe comme avant
             const length = +lengthEl.value;
             const hasUpper = uppercaseEl.checked;
             const hasNumbers = numbersEl.checked;
@@ -176,7 +177,6 @@
             return finalPassword;
         }
 
-        // Fonctions qui génèrent les caractères aléatoires
         function getRandomLower() {
             return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
         }
@@ -191,6 +191,5 @@
             return symbols[Math.floor(Math.random() * symbols.length)];
         }
     </script>
-
 </body>
 </html>
